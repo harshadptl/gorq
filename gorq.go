@@ -3,12 +3,18 @@ package gorq
 import (
 	"bytes"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/garyburd/redigo/redis"
 	"github.com/goibibo/mantle"
-	"github.com/goibibo/t-coredb"
 	. "github.com/kisielk/og-rek"
+	"github.com/goibibo/t-coredb"
 	"github.com/nu7hatch/gouuid"
-	"sync"
+)
+
+const (
+	DEFAULT_TIMEOUT = "600"
 )
 
 //A pool of redis connections used for enquing jobs in redis
@@ -102,9 +108,19 @@ func (job *RQJob) EnqueueJob(rqJob Hargs) {
 }
 
 //This method encodes and then enqueues the jobs in Redis
+//"rq:job:8074515e-591d-40e8-a8c0-dffdcfdadc07" "origin" "default" "status" "queued" "description" "add.add(2, 2)" "created_at" "2015-01-20T11:35:12Z" "enqueued_at" "2015-01-20T11:35:12Z" "timeout" "180" "data" "(Vadd.add\np1\nN(I2\nI2\ntp2\n(dp3\ntp4\n."
 //TODO: Expose a EnQAndStart method
 func (job *RQJob) Enqueue() {
-	rqJob := map[string]string{"data": job.EncodeJob()}
+	t := time.Now().Local()
+	tstr := t.Format("2006-01-02T15:04:05Z")
+
+	rqJob := map[string]string{"data": job.EncodeJob(),
+		"origin":      "default",
+		"status":      "queued",
+		"description": job.funcName,
+		"timeout":     DEFAULT_TIMEOUT,
+		"created_at":  tstr,
+		"enqueued_at": tstr}
 	job.EnqueueJob(rqJob)
 }
 
