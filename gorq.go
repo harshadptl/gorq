@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	DEFAULT_TIMEOUT = "600"
+	DEFAULT_TIMEOUT = "180"
 )
 
 //A pool of redis connections used for enquing jobs in redis
