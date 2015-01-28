@@ -76,6 +76,7 @@ func DecodeResult(result string) string {
 	v, err := dec.Decode()
 	if err != nil {
 		fmt.Println(err)
+		return ""
 	}
 	return v.(string)
 }
