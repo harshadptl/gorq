@@ -8,7 +8,7 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/goibibo/mantle"
-	. "github.com/kisielk/og-rek"
+	. "github.com/harshadptl/og-rek"
 	"github.com/goibibo/t-coredb"
 	"github.com/nu7hatch/gouuid"
 )
