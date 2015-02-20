@@ -8,8 +8,8 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/goibibo/mantle"
-	. "github.com/harshadptl/og-rek"
 	"github.com/goibibo/t-coredb"
+	. "github.com/harshadptl/og-rek"
 	"github.com/nu7hatch/gouuid"
 )
 
@@ -142,4 +142,14 @@ func (job *RQJob) Result() string {
 		return "nil"
 	}
 	return DecodeResult(result)
+}
+
+//This method returns the status of the job
+func (job *RQJob) Status() string {
+	queueId := job.QueueId()
+	result, err := redis.String(rqRedisPool.Execute("HGET", queueId, "status"))
+	if err != nil {
+		return "nil"
+	}
+	return result
 }
